@@ -51,14 +51,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			//text message
 			case *linebot.TextMessage:
 				//find sender's username
-				if res, err := bot.GetProfile(event.Source.UserID).Do(); err != nil {
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(event.Source.UserID+" said:"+message.Text)).Do()
+				userid := event.Source.UserID
+				if res, err := bot.GetProfile(userid).Do(); err != nil {
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(userid+" said:"+message.Text)).Do()
 					log.Print(err)
 				} else {
 					replytoken := event.ReplyToken
 					username := res.DisplayName
 					orimsg := message.Text
-					replytext(replytoken, username, orimsg)
+					replytext(userid, replytoken, username, orimsg)
 				}
 				//sticker message
 			case *linebot.StickerMessage:
@@ -75,8 +76,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 //my line id:Uf016e10434dee6b3f864be761f5f723c
-func replytext(replytoken, username, orimsg string) {
-	bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+" said:"+orimsg)).Do()
+func replytext(userid, replytoken, username, orimsg string) {
+	if userid == "Uf016e10434dee6b3f864be761f5f723c" {
+		bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+"最棒!")).Do()
+		bot.ReplyMessage(replytoken, linebot.NewStickerMessage("2", "172")).Do()
+	} else {
+		bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+" said:"+orimsg)).Do()
+	}
+
 	//	if _, err = bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+" said:"+orimsg)).Do(); err != nil {
 	//		log.Print(err)
 	//	}

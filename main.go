@@ -48,11 +48,28 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
+			//text message
 			case *linebot.TextMessage:
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text+" OK!")).Do(); err != nil {
+				//get profle of sender
+				res, err := bot.GetProfile(event.Source.UserID).Do()
+				if err != nil {
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(res.DisplayName+" said:"+message.Text)).Do()
+				}
+				//sticker message
+			case *linebot.StickerMessage:
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewStickerMessage("2", "179")).Do(); err != nil {
+					log.Print(err)
+				}
+			default:
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewStickerMessage("2", "149")).Do(); err != nil {
 					log.Print(err)
 				}
 			}
 		}
 	}
 }
+
+//func replytext(str string) {
+//	switch str {
+//		}
+//	}

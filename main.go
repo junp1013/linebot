@@ -79,7 +79,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func replytext(userid, replytoken, username, orimsg string) {
 	//button menu
 	if strings.Contains(strings.ToUpper(orimsg), "LCY:MENU") {
-		imageURL := "https://goo.gl/images/pxwoAx"
+		imageURL := "/images/fire.jpg"
 		template := linebot.NewButtonsTemplate(
 			imageURL, "My button sample", "Hello, my button",
 			linebot.NewURITemplateAction("Go to line.me", "https://line.me"),

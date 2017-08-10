@@ -77,18 +77,33 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func replytext(userid, replytoken, username, orimsg string) {
+	//menu
+	if strings.Contains(strings.ToUpper(orimsg), "LCY:MENU") {
+		imageURL := "https://goo.gl/images/pxwoAx"
+		template := linebot.NewButtonsTemplate(
+			imageURL, "My button sample", "Hello, my button",
+			linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
+			linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
+			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
+			linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+		)
+		bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template))
+	}
 	//check coming message key words and reply
+	if strings.Contains(orimsg, "哈") {
+		bot.ReplyMessage(replytoken, linebot.NewStickerMessage("2", "160")).Do()
+	}
 	if strings.Contains(orimsg, "抱") {
 		bot.ReplyMessage(replytoken, linebot.NewStickerMessage("2", "157")).Do()
 	}
 	textmsg := username + " said:" + orimsg
 	//my line id:Uf016e10434dee6b3f864be761f5f723c
 	//green line id:Ud517dfdbfd690d483692fc3efc234b37
-	//can't send multiple mesages at once
+	//send multiple mesages at once
 	if userid == "Uf016e10434dee6b3f864be761f5f723c" {
-		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg+" 最棒!"), linebot.NewStickerMessage("2", "157")).Do()
+		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg+"(copy kiss)"), linebot.NewStickerMessage("2", "157")).Do()
 	}
-	bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg)).Do()
+	bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg), linebot.NewStickerMessage("2", "170")).Do()
 	//	if _, err = bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+" said:"+orimsg)).Do(); err != nil {
 	//		log.Print(err)
 	//	}

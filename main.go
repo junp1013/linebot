@@ -79,7 +79,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func replytext(userid, replytoken, username, orimsg string) {
 	//button menu
 	if strings.Contains(strings.ToUpper(orimsg), "LCY:MENU") {
-		imageURL := "http://cdn2.ettoday.net/images/1954/1954277.jpg"
+		imageURL := "https://goo.gl/images/ow74jA"
 		template := linebot.NewButtonsTemplate(
 			imageURL, "My button sample", "Hello, my button",
 			linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
@@ -88,6 +88,9 @@ func replytext(userid, replytoken, username, orimsg string) {
 			linebot.NewMessageTemplateAction("Say message", "Rice=米"),
 		)
 		bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do()
+		//		if _, err = bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do(); err != nil {
+		//			log.Print(err)
+		//		}
 	}
 	//check coming message key words and reply
 	if strings.Contains(orimsg, "哈") {

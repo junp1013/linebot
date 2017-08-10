@@ -79,7 +79,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func replytext(userid, replytoken, username, orimsg string) {
 	//button menu
 	if strings.Contains(strings.ToUpper(orimsg), "LCY:MENU") {
-		imageURL := "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTWTzsdqKf819jFSlWY33yAZ4leqTNH_NWu6--twjtfg-PVEA-"
+		imageURL := "http://cdn2.ettoday.net/images/1954/1954277.jpg'
 		template := linebot.NewButtonsTemplate(
 			imageURL, "My button sample", "Hello, my button",
 			linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
@@ -101,7 +101,7 @@ func replytext(userid, replytoken, username, orimsg string) {
 	//green line id:Ud517dfdbfd690d483692fc3efc234b37
 	//send multiple mesages at once
 	if userid == "Uf016e10434dee6b3f864be761f5f723c" {
-		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg+"(copy kiss)"), linebot.NewStickerMessage("2", "157")).Do()
+		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg), linebot.NewStickerMessage("2", "157")).Do()
 	}
 	bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg), linebot.NewStickerMessage("2", "170")).Do()
 	//	if _, err = bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+" said:"+orimsg)).Do(); err != nil {

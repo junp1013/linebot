@@ -78,13 +78,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 func replytext(userid, replytoken, username, orimsg string) {
 	//check coming message key words and reply
-	if strings.Contains(orimsg, "喜歡") {
-		if userid == "Uf016e10434dee6b3f864be761f5f723c" {
-			bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+":妳有沒有喜歡我?我可不可以喜歡妳?")).Do()
-		} else {
-			bot.ReplyMessage(replytoken, linebot.NewStickerMessage("2", "158")).Do()
-		}
-	}
 	if strings.Contains(orimsg, "抱") {
 		bot.ReplyMessage(replytoken, linebot.NewStickerMessage("2", "157")).Do()
 	}
@@ -93,10 +86,7 @@ func replytext(userid, replytoken, username, orimsg string) {
 	//green line id:Ud517dfdbfd690d483692fc3efc234b37
 	//can't send multiple mesages at once
 	if userid == "Uf016e10434dee6b3f864be761f5f723c" {
-		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg+" 最棒!")).Do()
-	}
-	if userid == "Ud517dfdbfd690d483692fc3efc234b37" {
-		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg+" 最美!")).Do()
+		bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg+" 最棒!"), linebot.NewStickerMessage("2", "157")).Do()
 	}
 	bot.ReplyMessage(replytoken, linebot.NewTextMessage(textmsg)).Do()
 	//	if _, err = bot.ReplyMessage(replytoken, linebot.NewTextMessage(username+" said:"+orimsg)).Do(); err != nil {

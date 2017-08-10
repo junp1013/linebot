@@ -87,7 +87,7 @@ func replytext(userid, replytoken, username, orimsg string) {
 			linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
 			linebot.NewMessageTemplateAction("Say message", "Rice=米"),
 		)
-		bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template))
+		bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do()
 	}
 	//check coming message key words and reply
 	if strings.Contains(orimsg, "哈") {

@@ -63,7 +63,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				//button menu
 				if strings.Contains(strings.ToUpper(orimsg), "LCYMENU") {
-					imageURL := "http://3pm.hk/wp-content/uploads/2016/12/9a2cf1bd25a8d456f9366aff16c4548f1480925877.png"
+					imageURL := "https://pkget.com/images/skill/136.png"
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
 						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),

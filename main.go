@@ -67,9 +67,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					template := linebot.NewButtonsTemplate(
 						imageURL, "My button sample", "Hello, my button",
 						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
-						linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
-						linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-						linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+						//						linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
+						//						linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
+						//						linebot.NewMessageTemplateAction("Say message", "Rice=米"),
 					)
 					//					bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do()
 					if _, err = bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do(); err != nil {

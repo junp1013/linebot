@@ -53,29 +53,39 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				replytoken := event.ReplyToken
 				orimsg := message.Text
-				if strings.Contains(strings.ToUpper(orimsg), "SRCTY") {
+				//				if strings.Contains(strings.ToUpper(orimsg), "SRCTY") {
+				//					//get group id
+				//					srcty := event.Source.Type
+				//					if srcty == linebot.EventSourceTypeGroup {
+				//						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S GROUP")).Do(); err != nil {
+				//							log.Print(err)
+				//						}
+				//					}
+				//					if srcty == linebot.EventSourceTypeRoom {
+				//						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S ROOM:"+event.Source.RoomID)).Do(); err != nil {
+				//							log.Print(err)
+				//						}
+				//					}
+				//					grpid := event.Source.GroupID
+
+				//				}
+				//leave the chat
+				if strings.Contains(strings.ToUpper(orimsg), "LCYBYE") {
 					//get group id
 					srcty := event.Source.Type
 					if srcty == linebot.EventSourceTypeGroup {
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S GROUP")).Do(); err != nil {
+						grpid := event.Source.GroupID
+						if _, err := bot.LeaveGroup(grpid).Do(); err != nil {
 							log.Print(err)
 						}
 					}
 					if srcty == linebot.EventSourceTypeRoom {
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S ROOM:"+event.Source.RoomID)).Do(); err != nil {
+						rid := event.Source.RoomID
+						if _, err := bot.LeaveRoom(rid).Do(); err != nil {
 							log.Print(err)
 						}
 					}
-					//					grpid := event.Source.GroupID
 
-				}
-				//leave the group id
-				if strings.Contains(strings.ToUpper(orimsg), "LCYBYE") {
-					//get group id
-					grpid := event.Source.GroupID
-					if _, err := bot.LeaveGroup(grpid).Do(); err != nil {
-						log.Print(err)
-					}
 				}
 				//button menu
 				if strings.Contains(strings.ToUpper(orimsg), "LCYMENU") {

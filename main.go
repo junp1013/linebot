@@ -65,11 +65,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if strings.Contains(strings.ToUpper(orimsg), "LCYMENU") {
 					imageURL := "https://pkget.com/images/skill/136.png"
 					template := linebot.NewButtonsTemplate(
-						imageURL, "My button sample", "Hello, my button",
-						linebot.NewURITemplateAction("Go to line.me", "https://line.me"),
-						//						linebot.NewPostbackTemplateAction("Say hello1", "hello こんにちは", ""),
-						//						linebot.NewPostbackTemplateAction("言 hello2", "hello こんにちは", "hello こんにちは"),
-						//						linebot.NewMessageTemplateAction("Say message", "Rice=米"),
+						imageURL, "Menu", "選單",
+						linebot.NewURITemplateAction("開啟測試網址", "http://www.pokemon.com/us/pokedex/eevee"),
+						//												linebot.NewPostbackTemplateAction("在哪?", "where", ""),
+						linebot.NewPostbackTemplateAction("在哪?", "where", "你在哪?"),
+						linebot.NewMessageTemplateAction("誇一下", "我好棒棒!"),
 					)
 					//					bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do()
 					if _, err = bot.ReplyMessage(replytoken, linebot.NewTemplateMessage("Menu", template)).Do(); err != nil {
@@ -101,6 +101,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 func replytext(userid, replytoken, username, orimsg string) {
 	//check coming message key words and reply
+	if strings.Contains(orimsg, "哪") {
+		bot.ReplyMessage(replytoken, linebot.NewLocationMessage("訊息位置", "111台北市士林區忠誠路二段55號", 25.111857, 121.531367)).Do()
+	}
 	if strings.Contains(orimsg, "哈") {
 		bot.ReplyMessage(replytoken, linebot.NewStickerMessage("1", "110")).Do()
 	}

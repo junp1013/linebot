@@ -53,6 +53,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				replytoken := event.ReplyToken
 				orimsg := message.Text
+				if strings.Contains(strings.ToUpper(orimsg), "LCYBYE") {
+					//get group id
+					grpid := event.Source.GroupID
+					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("GROUP ID:"+grpid)).Do(); err != nil {
+						log.Print(err)
+					}
+				}
 				//leave the group id
 				if strings.Contains(strings.ToUpper(orimsg), "LCYBYE") {
 					//get group id

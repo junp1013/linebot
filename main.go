@@ -62,7 +62,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						}
 					}
 					if srcty == linebot.EventSourceTypeRoom {
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S ROOM")).Do(); err != nil {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S ROOM:"+event.Source.RoomID)).Do(); err != nil {
 							log.Print(err)
 						}
 					}

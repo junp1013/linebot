@@ -57,7 +57,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if strings.Contains(strings.ToUpper(orimsg), "LCYBYE") {
 					//get group id
 					grpid := event.Source.GroupID
-					if _, err := bot.LeaveRoom(grpid).Do(); err != nil {
+					if _, err := bot.LeaveGroup(grpid).Do(); err != nil {
 						log.Print(err)
 					}
 				}

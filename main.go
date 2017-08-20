@@ -211,11 +211,11 @@ func parseGoogleSearchResult(replytoken string, resp maps.PlacesSearchResponse) 
 	//	//send result
 	//	bot.ReplyMessage(replytoken, msg).Do()
 	bot.ReplyMessage(replytoken,
-		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[0].Name, "地址:"+resp.Results[0].Vicinity, resp.Results[0].Geometry.Location.Lat, resp.Results[0].Geometry.Location.Lng),
-		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[1].Name, "地址:"+resp.Results[1].Vicinity, resp.Results[1].Geometry.Location.Lat, resp.Results[1].Geometry.Location.Lng),
-		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[2].Name, "地址:"+resp.Results[2].Vicinity, resp.Results[2].Geometry.Location.Lat, resp.Results[2].Geometry.Location.Lng),
-		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[3].Name, "地址:"+resp.Results[3].Vicinity, resp.Results[3].Geometry.Location.Lat, resp.Results[3].Geometry.Location.Lng),
-		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[4].Name, "地址:"+resp.Results[4].Vicinity, resp.Results[4].Geometry.Location.Lat, resp.Results[4].Geometry.Location.Lng),
+		linebot.NewLocationMessage(resp.Results[0].Name, "地址:"+resp.Results[0].Vicinity, resp.Results[0].Geometry.Location.Lat, resp.Results[0].Geometry.Location.Lng),
+		linebot.NewLocationMessage(resp.Results[1].Name, "地址:"+resp.Results[1].Vicinity, resp.Results[1].Geometry.Location.Lat, resp.Results[1].Geometry.Location.Lng),
+		linebot.NewLocationMessage(resp.Results[2].Name, "地址:"+resp.Results[2].Vicinity, resp.Results[2].Geometry.Location.Lat, resp.Results[2].Geometry.Location.Lng),
+		linebot.NewLocationMessage(resp.Results[3].Name, "地址:"+resp.Results[3].Vicinity, resp.Results[3].Geometry.Location.Lat, resp.Results[3].Geometry.Location.Lng),
+		linebot.NewLocationMessage(resp.Results[4].Name, "地址:"+resp.Results[4].Vicinity, resp.Results[4].Geometry.Location.Lat, resp.Results[4].Geometry.Location.Lng),
 	).Do()
 }
 

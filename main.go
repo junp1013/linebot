@@ -168,7 +168,7 @@ func nearbysearch(lalo, replytoken string) {
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}
-	bot.ReplyMessage(replytoken, linebot.NewTextMessage("ApiKey: "+os.Getenv("ApiKey"))).Do()
+
 	r := &maps.NearbySearchRequest{
 		Radius: *radius,
 		//		Keyword:   *keyword,
@@ -177,7 +177,7 @@ func nearbysearch(lalo, replytoken string) {
 		OpenNow:   *openNow,
 		PageToken: *pageToken,
 	}
-
+	bot.ReplyMessage(replytoken, linebot.NewTextMessage("req: "+*language+","+*pageToken)).Do()
 	parseLocation(*location, r)
 	//	parsePriceLevels(*minPrice, *maxPrice, r)
 	parseRankBy(*rankBy, r)

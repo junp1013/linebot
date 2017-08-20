@@ -156,19 +156,19 @@ func nearbysearch(lalo, replytoken string) {
 		language = flag.String("language", "zh-TW", "The language in which to return results.")
 		//	minPrice  = flag.String("minprice", "", "Restricts results to only those places within the specified price level.")
 		//	maxPrice  = flag.String("maxprice", "", "Restricts results to only those places within the specified price level.")
-		//	name      = flag.String("name", "", "One or more terms to be matched against the names of places, separated with a space character.")
+		//name      = flag.String("name", "", "One or more terms to be matched against the names of places, separated with a space character.")
 		openNow   = flag.Bool("open_now", true, "Restricts results to only those places that are open for business at the time the query is sent.")
 		rankBy    = flag.String("rankby", "distance", "Specifies the order in which results are listed. Valid values are prominence or distance.")
 		placeType = flag.String("type", "restaurant", "Restricts the results to places matching the specified type.")
 		pageToken = flag.String("pagetoken", "", "Set to retrieve the next next page of results.")
 	)
 	flag.Parse()
-	//google maps
+	//google map api
 	gmaps, err := maps.NewClient(maps.WithAPIKey(os.Getenv("ApiKey")))
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}
-
+	//request
 	r := &maps.NearbySearchRequest{
 		//		Radius: *radius,
 		//		Keyword:   *keyword,
@@ -177,25 +177,46 @@ func nearbysearch(lalo, replytoken string) {
 		OpenNow:   *openNow,
 		PageToken: *pageToken,
 	}
-
 	parseLocation(*location, r)
 	//	parsePriceLevels(*minPrice, *maxPrice, r)
 	parseRankBy(*rankBy, r)
 	parsePlaceType(*placeType, r)
-
+	//response
 	resp, err := gmaps.NearbySearch(context.Background(), r)
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}
-	result := resp.Results[0]
-	if result.Name != "" {
-		rname := result.Name
-		radd := result.Vicinity
-		rla := result.Geometry.Location.Lat
-		rlo := result.Geometry.Location.Lng
-		//bot.ReplyMessage(replytoken, linebot.NewTextMessage("google map: "+rname+","+radd)).Do()
-		bot.ReplyMessage(replytoken, linebot.NewLocationMessage("訊息位置", rname+","+radd, rla, rlo)).Do()
-	}
+	parseGoogleSearchResult(replytoken, resp)
+}
+
+func parseGoogleSearchResult(replytoken string, resp maps.PlacesSearchResponse) {
+	//	var (
+	//		msg       = make([]linebot.Message, 5)
+	//		address   = flag.String("address", "", "One or more terms to be matched against the names of places, separated with a space character.")
+	//		latitude  = flag.Float64("latitude", 0, "One or more terms to be matched against the names of places, separated with a space character.")
+	//		longitude = flag.Float64("longitude", 0, "One or more terms to be matched against the names of places, separated with a space character.")
+	//		//		locationmsg = linebot.LocationMessage
+	//	)
+	//	for i := 0; i <= 4; i++ {
+	//		result := resp.Results[i]
+	//		if result.Name != "" {
+	//			name := result.Name
+	//			address := result.Vicinity
+	//			latitude := result.Geometry.Location.Lat
+	//			longitude := result.Geometry.Location.Lng
+	//			locationmsg := linebot.NewLocationMessage("附近餐廳", "名稱:"+name+",地址:"+address, latitude, longitude)
+	//			msg = append(msg, locationmsg)
+	//		}
+	//	}
+	//	//send result
+	//	bot.ReplyMessage(replytoken, msg).Do()
+	bot.ReplyMessage(replytoken,
+		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[0].Name, "地址:"+resp.Results[0].Vicinity, resp.Results[0].Geometry.Location.Lat, resp.Results[0].Geometry.Location.Lng),
+		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[1].Name, "地址:"+resp.Results[1].Vicinity, resp.Results[1].Geometry.Location.Lat, resp.Results[1].Geometry.Location.Lng),
+		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[2].Name, "地址:"+resp.Results[2].Vicinity, resp.Results[2].Geometry.Location.Lat, resp.Results[2].Geometry.Location.Lng),
+		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[3].Name, "地址:"+resp.Results[3].Vicinity, resp.Results[3].Geometry.Location.Lat, resp.Results[3].Geometry.Location.Lng),
+		linebot.NewLocationMessage("餐廳名稱:"+resp.Results[4].Name, "地址:"+resp.Results[4].Vicinity, resp.Results[4].Geometry.Location.Lat, resp.Results[4].Geometry.Location.Lng),
+	).Do()
 }
 
 func parseLocation(location string, r *maps.NearbySearchRequest) {

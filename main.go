@@ -164,7 +164,7 @@ func nearbysearch(lalo, replytoken string) {
 	)
 	flag.Parse()
 	//google maps
-	gmaps, err := maps.NewClient(maps.WithAPIKey(os.Getenv("APIKey")))
+	gmaps, err := maps.NewClient(maps.WithAPIKey(os.Getenv("ApiKey")))
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}

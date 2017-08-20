@@ -190,7 +190,7 @@ func nearbysearch(lalo, replytoken string) {
 	result := resp.Results[0]
 	if result.Name != "" {
 		rname := result.Name
-		radd := result.FormattedAddress
+		radd := result.Vicinity
 		rla := result.Geometry.Location.Lat
 		rlo := result.Geometry.Location.Lng
 		//bot.ReplyMessage(replytoken, linebot.NewTextMessage("google map: "+rname+","+radd)).Do()

@@ -151,7 +151,7 @@ func nearbysearch(lalo, replytoken string) {
 		//	clientID  = flag.String("client_id", "", "ClientID for Maps for Work API access.")
 		//	signature = flag.String("signature", "", "Signature for Maps for Work API access.")
 		location = flag.String("location", lalo, "The latitude/longitude around which to retrieve place information. This must be specified as latitude,longitude.")
-		radius   = flag.Uint("radius", 500, "Defines the distance (in meters) within which to bias place results. The maximum allowed radius is 50,000 meters.")
+		//		radius   = flag.Uint("radius", 500, "Defines the distance (in meters) within which to bias place results. The maximum allowed radius is 50,000 meters.")
 		//	keyword   = flag.String("keyword", "", "Specifies the language in which to return results. Optional.")
 		language = flag.String("language", "zh-TW", "The language in which to return results.")
 		//	minPrice  = flag.String("minprice", "", "Restricts results to only those places within the specified price level.")
@@ -170,7 +170,7 @@ func nearbysearch(lalo, replytoken string) {
 	}
 
 	r := &maps.NearbySearchRequest{
-		Radius: *radius,
+		//		Radius: *radius,
 		//		Keyword:   *keyword,
 		Language: *language,
 		//		Name:      *name,
@@ -182,7 +182,7 @@ func nearbysearch(lalo, replytoken string) {
 	//	parsePriceLevels(*minPrice, *maxPrice, r)
 	parseRankBy(*rankBy, r)
 	parsePlaceType(*placeType, r)
-	//bot.ReplyMessage(replytoken, linebot.NewTextMessage("req: "+r.Location+","+r.)).Do()
+	//	bot.ReplyMessage(replytoken, linebot.NewTextMessage("req: "+r.RankBy+","+r.)).Do()
 	resp, err := gmaps.NearbySearch(context.Background(), r)
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)

@@ -182,7 +182,7 @@ func nearbysearch(lalo, replytoken string) {
 	//	parsePriceLevels(*minPrice, *maxPrice, r)
 	parseRankBy(*rankBy, r)
 	parsePlaceType(*placeType, r)
-	//	bot.ReplyMessage(replytoken, linebot.NewTextMessage("req: "+r.RankBy+","+r.)).Do()
+
 	resp, err := gmaps.NearbySearch(context.Background(), r)
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
@@ -191,9 +191,10 @@ func nearbysearch(lalo, replytoken string) {
 	if result.Name != "" {
 		rname := result.Name
 		radd := result.FormattedAddress
-		//		rla := result.Geometry.Location.Lat
-		//		rlo := result.Geometry.Location.Lng
-		bot.ReplyMessage(replytoken, linebot.NewTextMessage("google map: "+rname+","+radd)).Do()
+		rla := result.Geometry.Location.Lat
+		rlo := result.Geometry.Location.Lng
+		//bot.ReplyMessage(replytoken, linebot.NewTextMessage("google map: "+rname+","+radd)).Do()
+		bot.ReplyMessage(replytoken, linebot.NewLocationMessage("訊息位置", rname+","+radd, rla, rlo)).Do()
 	}
 }
 

@@ -177,14 +177,16 @@ func nearbysearch(lalo, replytoken string) {
 		OpenNow:   *openNow,
 		PageToken: *pageToken,
 	}
-	bot.ReplyMessage(replytoken, linebot.NewTextMessage("req: "+*language+","+*pageToken)).Do()
+
 	parseLocation(*location, r)
 	//	parsePriceLevels(*minPrice, *maxPrice, r)
 	parseRankBy(*rankBy, r)
 	parsePlaceType(*placeType, r)
-
+	//bot.ReplyMessage(replytoken, linebot.NewTextMessage("req: "+r.Location+","+r.)).Do()
 	resp, err := gmaps.NearbySearch(context.Background(), r)
-
+	if err != nil {
+		log.Fatalf("fatal error: %s", err)
+	}
 	result := resp.Results[0]
 	if result.Name != "" {
 		rname := result.Name

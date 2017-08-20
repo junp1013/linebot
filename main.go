@@ -168,6 +168,7 @@ func nearbysearch(lalo, replytoken string) {
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}
+	bot.ReplyMessage(replytoken, linebot.NewTextMessage("ApiKey: "+os.Getenv("ApiKey"))).Do()
 	r := &maps.NearbySearchRequest{
 		Radius: *radius,
 		//		Keyword:   *keyword,

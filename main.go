@@ -13,6 +13,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -20,12 +21,15 @@ import (
 	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
+	"golang.org/x/net/context"
+	"googlemaps.github.io/maps"
 )
 
 var bot *linebot.Client
 
 func main() {
 	var err error
+	//line bot
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
@@ -48,27 +52,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
+			replytoken := event.ReplyToken
 			switch message := event.Message.(type) {
 			//text message
 			case *linebot.TextMessage:
-				replytoken := event.ReplyToken
 				orimsg := message.Text
-				//				if strings.Contains(strings.ToUpper(orimsg), "SRCTY") {
-				//					//get group id
-				//					srcty := event.Source.Type
-				//					if srcty == linebot.EventSourceTypeGroup {
-				//						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S GROUP")).Do(); err != nil {
-				//							log.Print(err)
-				//						}
-				//					}
-				//					if srcty == linebot.EventSourceTypeRoom {
-				//						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("IT'S ROOM:"+event.Source.RoomID)).Do(); err != nil {
-				//							log.Print(err)
-				//						}
-				//					}
-				//					grpid := event.Source.GroupID
-
-				//				}
 				//leave the chat
 				if strings.Contains(strings.ToUpper(orimsg), "LCYBYE") {
 					//get group id
@@ -116,6 +104,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewStickerMessage("2", "179")).Do(); err != nil {
 					log.Print(err)
 				}
+				//location message
+			case *linebot.LocationMessage:
+				lalo := fmt.Sprint(message.Latitude) + "," + fmt.Sprint(message.Longitude)
+				//google search anything nearby
+				nearbysearch(lalo, replytoken)
+
 			default:
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewStickerMessage("2", "149")).Do(); err != nil {
 					log.Print(err)
@@ -149,4 +143,86 @@ func replytext(userid, replytoken, username, orimsg string) {
 	//	}
 	//	switch str {
 	//		}
+}
+
+func nearbysearch(lalo, replytoken string) {
+	var (
+		//apiKey = flag.String("key", "", "API Key for using Google Maps API.")
+		//	clientID  = flag.String("client_id", "", "ClientID for Maps for Work API access.")
+		//	signature = flag.String("signature", "", "Signature for Maps for Work API access.")
+		location = flag.String("location", lalo, "The latitude/longitude around which to retrieve place information. This must be specified as latitude,longitude.")
+		radius   = flag.Uint("radius", 500, "Defines the distance (in meters) within which to bias place results. The maximum allowed radius is 50,000 meters.")
+		//	keyword   = flag.String("keyword", "", "Specifies the language in which to return results. Optional.")
+		language = flag.String("language", "zh-TW", "The language in which to return results.")
+		//	minPrice  = flag.String("minprice", "", "Restricts results to only those places within the specified price level.")
+		//	maxPrice  = flag.String("maxprice", "", "Restricts results to only those places within the specified price level.")
+		//	name      = flag.String("name", "", "One or more terms to be matched against the names of places, separated with a space character.")
+		openNow   = flag.Bool("open_now", true, "Restricts results to only those places that are open for business at the time the query is sent.")
+		rankBy    = flag.String("rankby", "distance", "Specifies the order in which results are listed. Valid values are prominence or distance.")
+		placeType = flag.String("type", "restaurant", "Restricts the results to places matching the specified type.")
+		pageToken = flag.String("pagetoken", "", "Set to retrieve the next next page of results.")
+	)
+	flag.Parse()
+	//google maps
+	gmaps, err := maps.NewClient(maps.WithAPIKey(os.Getenv("APIKey")))
+	if err != nil {
+		log.Fatalf("fatal error: %s", err)
+	}
+	r := &maps.NearbySearchRequest{
+		Radius: *radius,
+		//		Keyword:   *keyword,
+		Language: *language,
+		//		Name:      *name,
+		OpenNow:   *openNow,
+		PageToken: *pageToken,
+	}
+
+	parseLocation(*location, r)
+	//	parsePriceLevels(*minPrice, *maxPrice, r)
+	parseRankBy(*rankBy, r)
+	parsePlaceType(*placeType, r)
+
+	resp, err := gmaps.NearbySearch(context.Background(), r)
+
+	result := resp.Results[0]
+	if result.Name != "" {
+		rname := result.Name
+		radd := result.FormattedAddress
+		//		rla := result.Geometry.Location.Lat
+		//		rlo := result.Geometry.Location.Lng
+		bot.ReplyMessage(replytoken, linebot.NewTextMessage("google map: "+rname+","+radd)).Do()
+	}
+}
+
+func parseLocation(location string, r *maps.NearbySearchRequest) {
+	if location != "" {
+		actual, err := maps.ParseLatLng(location)
+		if err != nil {
+			log.Fatalf("fatal error: %s", err)
+		}
+		r.Location = &actual
+	}
+}
+
+func parseRankBy(rankBy string, r *maps.NearbySearchRequest) {
+	switch rankBy {
+	case "prominence":
+		r.RankBy = maps.RankByProminence
+		return
+	case "distance":
+		r.RankBy = maps.RankByDistance
+		return
+	default:
+		return
+	}
+}
+
+func parsePlaceType(placeType string, r *maps.NearbySearchRequest) {
+	if placeType != "" {
+		t, err := maps.ParsePlaceType(placeType)
+		if err != nil {
+			log.Print(err)
+		}
+		r.Type = t
+	}
 }
